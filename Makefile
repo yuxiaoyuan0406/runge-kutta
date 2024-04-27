@@ -3,10 +3,18 @@ CWD := $(shell pwd)
 PROJECT_NAME := $(shell basename $(CWD))
 TARGET_EXEC := $(PROJECT_NAME)
 
-DEBUG := 0
+# DEBUG := 0
 
-BUILD_DIR := ./build
+BUILD_ROOT := ./build
 SRC_DIRS := ./src
+
+ifeq ($(DEBUG), 1)
+	# BUILD_DIR := $(BUILD_ROOT)/debug
+	BUILD_DIR := $(BUILD_ROOT)
+else
+	# BUILD_DIR := $(BUILD_ROOT)/release
+	BUILD_DIR := $(BUILD_ROOT)
+endif
 
 # Set compiler
 CC := $(shell which gcc)
@@ -37,15 +45,6 @@ ifeq ($(DEBUG), 1)
 	CPPFLAGS += -g
 endif
 
-# Enable compile_commands.json when not clean
-ifneq ($(MAKECMDGOALS),clean)
-	ifeq (,$(shell which bear))
-		BEAR_FOUND := $(warning Warning: bear is not installed, therefore compile_commands.json will not be generated.)
-	else
-		export BUILD_CDB := "1"
-	endif
-endif
-
 # The final build step.
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
@@ -54,23 +53,16 @@ $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 $(BUILD_DIR)/%.c.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-ifeq ($(BUILD_CDB), "1")
-	@bear --append -- $(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-endif
 
 # Build step for C++ source
 $(BUILD_DIR)/%.cpp.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
-ifeq ($(BUILD_CDB), "1")
-	@bear --append -- $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
-endif
 
 
 .PHONY: clean
 clean:
-	-@rm -r $(BUILD_DIR)
-	-@rm compile_commands.json
+	-@rm -r $(BUILD_ROOT)
 
 # Include the .d makefiles. The - at the front suppresses the errors of missing
 # Makefiles. Initially, all the .d files will be missing, and we don't want those
