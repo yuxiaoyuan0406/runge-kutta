@@ -1,12 +1,6 @@
-# C template with Makefile
+# Runge-Kutta Methods with C
 
-Using `make` to organize project.
-
-## usage
-
-Put source files in `src`.
-
-Then run `make`.
+Runge-Kutta Methods with C.
 
 ## dependency
 
