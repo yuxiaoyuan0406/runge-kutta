@@ -41,6 +41,8 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 # These files will have .d instead of .o as the output.
 CPPFLAGS := $(INC_FLAGS) -MMD -MP -Wall -Wextra
 
+LDFLAGS := -lpthread
+
 ifeq ($(DEBUG), 1)
 	CPPFLAGS += -g
 endif

@@ -30,4 +30,20 @@ void function_data_generator(
     array_t src,
     simple_function_t f);
 
+/// @brief Add two arrays.
+/// @param a1 Addend.
+/// @param a2 Addend.
+/// @param sum Sum.
+/// @return Sum array.
+array_t array_addition(array_t a1, array_t a2, array_t sum);
+
+/// @brief Add two vectors.
+/// @param a1 Addend.
+/// @param a2 Addend.
+/// @param sum Sum.
+/// @return Sum vector.
+vector_t vector_addition(vector_t a1, vector_t a2, vector_t sum);
+
+array_t number_multiplication_array(array_t_value_typedef x, array_t a, array_t prod);
+
 #endif
