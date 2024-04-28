@@ -29,12 +29,4 @@ void function_data_generator(
     array_t src,
     simple_function_t f);
 
-/// @brief Save the data of a array type to text-base file.
-/// @param a Array data object.
-/// @param f File handle.
-/// @return how many lines saved
-array_t_value_typedef save_data(
-    array_t a,
-    FILE * f);
-
 #endif

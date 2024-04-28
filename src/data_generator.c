@@ -27,12 +27,3 @@ void function_data_generator(array_t dest, array_t src, simple_function_t f)
         dest->val[i] = f(src->val[i]);
 }
 
-array_t_value_typedef save_data(array_t a, FILE *f)
-{
-    array_t_size_typedef i;
-    for (i = 0; i < a->size; i++)
-    {
-        fprintf(f, "%.14lf\n", a->val[i]);
-    }
-    return i;
-}
