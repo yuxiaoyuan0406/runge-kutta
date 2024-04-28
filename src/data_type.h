@@ -18,7 +18,7 @@ typedef double array_t_value_typedef;
 
 /// @brief Array data type. 
 /// 
-typedef struct 
+typedef struct _array
 {
     const array_t_size_typedef size;
     array_t_value_typedef val[];
