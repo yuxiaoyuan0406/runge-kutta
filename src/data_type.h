@@ -8,6 +8,9 @@
 
 /// Basic data type and data object function.
 
+/// @brief check if two array data object is same size
+#define IS_SAME_SIZE(a,b) ((a)->size == (b)->size)
+
 /// @brief size type of array data
 typedef uint32_t array_t_size_typedef;
 /// @brief value type of array data

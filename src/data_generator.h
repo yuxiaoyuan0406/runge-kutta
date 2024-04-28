@@ -7,9 +7,6 @@
 #include "data_type.h"
 #include "common.h"
 
-/// @brief check if two array data object is same size
-#define IS_SAME_SIZE(a,b) ((a)->size == (b)->size)
-
 /// @brief type for a value-to-value math-function
 typedef array_t_value_typedef simple_function_t(array_t_value_typedef);
 
