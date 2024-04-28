@@ -4,8 +4,7 @@
 #ifndef __DATA_TYPE_H
 #define __DATA_TYPE_H
 
-#include <stdlib.h>
-#include <stdint.h>
+#include "common.h"
 
 /// Basic data type and data object function.
 

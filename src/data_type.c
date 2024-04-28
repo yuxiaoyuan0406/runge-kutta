@@ -2,7 +2,7 @@
 /// @date   2024-04-27
 
 #include "data_type.h"
-#include <stdio.h>
+#include "common.h"
 
 array_t new_array(array_t_size_typedef size)
 {
