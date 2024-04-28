@@ -11,14 +11,15 @@
 typedef array_t_value_typedef simple_function_t(array_t_value_typedef);
 
 /// @brief Linear array data generator, create a new array.
+/// @param a The array where data should be saved.
 /// @param begin The begin value of linear data.
 /// @param step The step which each value increases.
 /// @param size The size of the array.
-/// @return New linear data array object.
+/// @return Linear data array object.
 array_t linear_data_generator(
+    array_t a,
     array_t_value_typedef begin, 
-    array_t_value_typedef step,
-    array_t_size_typedef size);
+    array_t_value_typedef step);
 
 /// @brief Funtion defined value creator. `dest` = f(`src`)
 /// @param dest output value of the function `f`
