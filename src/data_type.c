@@ -104,7 +104,7 @@ array_t_value_typedef save_array_data(array_t a, FILE *f)
     array_t_size_typedef i;
     for (i = 0; i < a->size; i++)
     {
-        fprintf(f, "%.14lf\n", a->val[i]);
+        fprintf(f, "%.18lf\n", a->val[i]);
     }
     return i;
 }
@@ -118,7 +118,7 @@ array_t_size_typedef save_vector_data(vector_t v, FILE *f)
     {
         for (vector_t_dim_typedef j = 0; j < v->dim; j++)
         {
-            fprintf(f, "%.14lf\t", v->member[j]->val[i]);
+            fprintf(f, "%.18lf\t", v->member[j]->val[i]);
         }
         fprintf(f, "\n");
     }

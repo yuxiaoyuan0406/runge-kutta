@@ -15,9 +15,18 @@
 /// k_3 = f(x_n + h/2, y_n + k_2 * h/2)
 /// k_4 = f(x_n + h, y_n + k_3 * h)
 
+/// @brief the binary function type.
+/////////////////////////////////////////
+/// To calculate a value at point (x,y):
+/// `binary_function(y', y, x, is_half, other)`
+typedef void* binary_function(array_t, array_t, array_t_value_typedef, bool, void *);
 
-typedef void* binary_function(array_t, void *);
-
-array_t runge_kutta_next_step(array_t next, array_t this, binary_function f);
+/// @brief Calculate the next state using runge-kutta methods.
+/// @param next The next step.
+/// @param this This step.
+/// @param f The binary function `f` defined by `y' = f(x,y)`.
+/// @param par Other parameters pass to the binary function.
+/// @return The next step.
+array_t runge_kutta_next_step(array_t next_y, array_t this_y, array_t_value_typedef this_x, array_t_value_typedef step_x, binary_function f, void *par);
 
 #endif

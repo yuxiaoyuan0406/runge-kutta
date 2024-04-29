@@ -42,6 +42,17 @@ array_t array_addition(array_t a1, array_t a2, array_t sum)
     return sum;
 }
 
+array_t array_copy(array_t dest, array_t src)
+{
+    CHECK_NONE_ZERO(IS_SAME_SIZE(dest, src), "Error: copy from different size array.");
+    for (array_t_size_typedef i = 0; i < dest->size; i++)
+    {
+        dest->val[i] = src->val[i];
+    }
+    
+    return dest;
+}
+
 void* thread_add_array(void* par)
 {
     array_t *a = (array_t*) par;

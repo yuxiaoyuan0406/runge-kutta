@@ -37,6 +37,12 @@ void function_data_generator(
 /// @return Sum array.
 array_t array_addition(array_t a1, array_t a2, array_t sum);
 
+/// @brief Copy array.
+/// @param dest Copy to.
+/// @param src Copy from.
+/// @return Destination.
+array_t array_copy(array_t dest, array_t src);
+
 /// @brief Add two vectors.
 /// @param a1 Addend.
 /// @param a2 Addend.
@@ -44,6 +50,11 @@ array_t array_addition(array_t a1, array_t a2, array_t sum);
 /// @return Sum vector.
 vector_t vector_addition(vector_t a1, vector_t a2, vector_t sum);
 
+/// @brief Array multiplied with a number.
+/// @param x The number to multiply.
+/// @param a Tha array to multiply.
+/// @param prod The product array.
+/// @return The product array.
 array_t number_multiplication_array(array_t_value_typedef x, array_t a, array_t prod);
 
 #endif
