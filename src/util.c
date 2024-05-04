@@ -4,6 +4,7 @@
 
 #ifdef __linux__
 #include <sys/stat.h>
+#include <sys/ioctl.h>
 #include <time.h>
 #elif defined(_WIN32)
 /// todo windows system operation lib
@@ -83,4 +84,56 @@ int save_simulation_param(
     return 0;
 }
 
+int open_data_files(FILE **sim_par, FILE **sim_out, const char *data_root)
+{
+    char date_and_time[40];
+    char simulation_data_directory[60];
+    char simulation_parameter_path[80];
+    char simulation_output_path[80];
 
+    system_time(date_and_time, sizeof(date_and_time));
+
+    sprintf(simulation_data_directory, "%s/%s", data_root, date_and_time);
+    sprintf(simulation_parameter_path, "%s/parameter.txt", simulation_data_directory);
+    sprintf(simulation_output_path, "%s/output.dat", simulation_data_directory);
+
+    if (create_path(simulation_data_directory)) {
+        return 1; // exit when fail to create path
+    }
+
+    *sim_par = fopen(simulation_parameter_path, "w");
+    if(*sim_par == NULL)
+        return 1;
+
+    *sim_out = fopen(simulation_output_path, "w");
+    if(*sim_out == NULL)
+        return 1;
+    
+    return 0;
+}
+
+int get_terminal_width()
+{
+    struct winsize w;
+    ioctl(stdout->_fileno, TIOCGWINSZ, &w);
+    return w.ws_col;
+}
+
+void update_progress_bar(size_t current, size_t total)
+{
+    size_t progress_bar_width = get_terminal_width() * 0.5;
+
+    float progress_percent = ((float)current / total) * 100;
+    size_t bar_length = (size_t)(progress_percent / 100 * progress_bar_width);
+
+    putchar('[');
+    for (size_t i = 0; i < progress_bar_width; i++)
+    {
+        if (i < bar_length)
+            putchar('=');
+        else
+            putchar(' ');
+    }
+    printf("] %.2f%%\r", progress_percent);
+    fflush(stdout);
+}

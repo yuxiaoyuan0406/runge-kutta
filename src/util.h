@@ -9,18 +9,18 @@
 /// @brief Create a directory if not-exists.
 /// @param path The directory to check.
 /// @return Status.
-int create_directory(const char *path);
+// int create_directory(const char *path);
 
 /// @brief Create a path.
 /// @param path The path to create.
 /// @return Status.
-int create_path(const char *path);
+// int create_path(const char *path);
 
 /// @brief Get system date-time, store in a string.
 /// @param buffer The string buffer.
 /// @param max_size The size of the buffer.
 /// @return The buffer.
-char *system_time(char *buffer, size_t max_size);
+// char *system_time(char *buffer, size_t max_size);
 
 /// @brief Save the simulation parameters to a file.
 /// @param f The file handler.
@@ -40,6 +40,16 @@ int save_simulation_param(
     double spr_coef, 
     double dump_coef);
 
+/// @brief Open the simulation parameters file and simulation output file. Both will be create under `data_root/{data-time}/`.
+/// @param sim_par The pointer to simulation parameter file handler.
+/// @param sim_out The pointer to simulation output file handler.
+/// @param data_root The root directory to data.
+/// @return Status.
+int open_data_files(FILE **sim_par, FILE **sim_out, const char *data_root);
 
+/// @brief Print a progress bar on screen.
+/// @param current Current step count.
+/// @param total The total steps to go.
+void update_progress_bar(size_t current, size_t total);
 
 #endif
