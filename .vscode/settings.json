@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "math.h": "c",
+        "data_type.h": "c",
+        "pthread.h": "c",
+        "errno.h": "c"
+    }
+}
