@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 #include "rk.h"
 #include "data_generator.h"
 #include "data_type.h"
@@ -47,6 +48,14 @@ double input_generator(double x)
 
 
 int main() {
+    time_t now;
+    struct tm *tm_info;
+    char date[40];
+
+    time(&now);
+    tm_info = localtime(&now);
+    strftime(date, sizeof(date), "%Y-%m-%d-%H%M%S", tm_info);
+
     spring_coef = spring_coef / mass;
     dumping_coef = dumping_coef / mass;
 
@@ -85,7 +94,10 @@ int main() {
     array_t out_raw[4] = {a_in->member[0], a_in->member[1], z->member[0], z->member[1]};
     vector_t out = combine_to_vector(4, out_raw);
     
-    FILE *f = fopen("data.dat", "w");
+    
+    char file_name[80];
+    sprintf(file_name, "%s-data.dat", date);
+    FILE *f = fopen(file_name, "w");
     save_vector_data(out, f);
     fclose(f);
 
