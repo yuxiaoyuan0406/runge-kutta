@@ -50,6 +50,7 @@ int open_data_files(FILE **sim_par, FILE **sim_out, const char *data_root);
 /// @brief Print a progress bar on screen.
 /// @param current Current step count.
 /// @param total The total steps to go.
-void update_progress_bar(size_t current, size_t total);
+/// @param s Extra message 
+void update_progress_bar(uint64_t current, uint64_t total, const char *s);
 
 #endif

@@ -3,6 +3,7 @@
 
 #include "data_type.h"
 #include "common.h"
+#include "util.h"
 
 array_t new_array(array_t_size_typedef size)
 {
@@ -114,14 +115,18 @@ array_t_size_typedef save_vector_data(vector_t v, FILE *f)
     CHECK_NONE_ZERO(v, "Error: try to save an null vector\n");
 
     array_t_size_typedef i;
-    for (i = 0; i < v->member[0]->size; i++)
+    array_t_size_typedef total = v->member[0]->size;
+    for (i = 0; i < total; i++)
     {
+        if (i % (total / 200) == 0)
+            update_progress_bar(i, total, "Saving progress: ");
         for (vector_t_dim_typedef j = 0; j < v->dim; j++)
         {
             fprintf(f, "%.18lf\t", v->member[j]->val[i]);
         }
         fprintf(f, "\n");
     }
+    update_progress_bar(i, total, "Saving progress: ");
     
     return i;
 }

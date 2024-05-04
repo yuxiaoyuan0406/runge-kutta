@@ -112,20 +112,21 @@ int open_data_files(FILE **sim_par, FILE **sim_out, const char *data_root)
     return 0;
 }
 
-int get_terminal_width()
+unsigned short get_terminal_width()
 {
     struct winsize w;
     ioctl(stdout->_fileno, TIOCGWINSZ, &w);
     return w.ws_col;
 }
 
-void update_progress_bar(size_t current, size_t total)
+void update_progress_bar(uint64_t current, uint64_t total, const char *s)
 {
-    size_t progress_bar_width = get_terminal_width() * 0.5;
+    size_t progress_bar_width = (size_t)(get_terminal_width() * 0.45 - strlen(s));
 
     float progress_percent = ((float)current / total) * 100;
     size_t bar_length = (size_t)(progress_percent / 100 * progress_bar_width);
 
+    printf(s);
     putchar('[');
     for (size_t i = 0; i < progress_bar_width; i++)
     {
@@ -134,6 +135,12 @@ void update_progress_bar(size_t current, size_t total)
         else
             putchar(' ');
     }
-    printf("] %.2f%%\r", progress_percent);
+    putchar(']');
+
+    if (current == total)
+        puts(" Done. ");
+    else
+        printf(" %.2f%% \r", progress_percent);
+
     fflush(stdout);
 }

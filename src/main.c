@@ -66,6 +66,10 @@ double input_generator(double x)
 }
 
 int main() {
+    // Open parameter and output file.
+    FILE *param_file, *output_file;
+    open_data_files(&param_file, &output_file, "data");
+    
     // Normalize coeficients
     normal_spr_coef = spring_coef / mass;
     normal_dmp_coef = dumping_coef / mass;
@@ -95,7 +99,7 @@ int main() {
     {
         // update progress bar every (SIMULATION_STEPS/500) steps
         if(i % (SIMULATION_STEPS / 500) == 0)
-            update_progress_bar(i, SIMULATION_STEPS-1);
+            update_progress_bar(i, SIMULATION_STEPS-1, "Simulation progress: ");
 
         // update temporaty status
         z_tmp->val[0] = z->member[0]->val[i];
@@ -112,15 +116,11 @@ int main() {
         z->member[0]->val[i+1] = z_next->val[0];
         z->member[1]->val[i+1] = z_next->val[1];
     }
-    putchar('\n');
+    update_progress_bar(SIMULATION_STEPS-1, SIMULATION_STEPS-1, "Simulation progress: ");
 
     // Combine time sequence, input sequence, output displacement, output velocity to one vector.
     array_t out_raw[4] = {a_in->member[0], a_in->member[1], z->member[0], z->member[1]};
     vector_t out = combine_to_vector(4, out_raw);
-    
-    // Open parameter and output file.
-    FILE *param_file, *output_file;
-    open_data_files(&param_file, &output_file, "data");
     
     // Save time and i/o data.
     save_vector_data(out, output_file);
@@ -134,6 +134,7 @@ int main() {
         mass, 
         spring_coef, 
         dumping_coef);
+    fclose(param_file);
 
     return 0;
 }
