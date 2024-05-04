@@ -4,6 +4,7 @@
 #include "rk.h"
 #include "data_generator.h"
 #include "data_type.h"
+#include "util.h"
 
 #define SIMULATION_DURATION         (2.0)       // second
 #define SIMULATION_LENGTH           (2000000)   // steps
@@ -11,9 +12,12 @@
 
 #define PI (4*atan(1))
 
-array_t_value_typedef mass = 7.45e-7;
-array_t_value_typedef spring_coef = 5.623;
-array_t_value_typedef dumping_coef = 4.95e-6;
+const array_t_value_typedef mass = 7.45e-7;
+const array_t_value_typedef spring_coef = 5.623;
+const array_t_value_typedef dumping_coef = 4.95e-6;
+
+array_t_value_typedef normal_spr_coef;
+array_t_value_typedef normal_dmp_coef;
 
 void* f(array_t dz, array_t z, array_t_value_typedef t, bool is_half, void * par)
 {
@@ -34,7 +38,7 @@ void* f(array_t dz, array_t z, array_t_value_typedef t, bool is_half, void * par
             return NULL;
 
     dz->val[0] = z->val[1];
-    dz->val[1] = -spring_coef * z->val[0] - dumping_coef * z->val[1] + a;
+    dz->val[1] = -normal_spr_coef * z->val[0] - normal_dmp_coef * z->val[1] + a;
 
     return NULL;
 }
@@ -48,19 +52,10 @@ double input_generator(double x)
 
 
 int main() {
-    time_t now;
-    struct tm *tm_info;
-    char date[40];
-
-    time(&now);
-    tm_info = localtime(&now);
-    strftime(date, sizeof(date), "%Y-%m-%d-%H%M%S", tm_info);
-
-    spring_coef = spring_coef / mass;
-    dumping_coef = dumping_coef / mass;
+    normal_spr_coef = spring_coef / mass;
+    normal_dmp_coef = dumping_coef / mass;
 
     vector_t a_in = new_vector(2, SIMULATION_LENGTH);
-    
     linear_data_generator(a_in->member[0], 0, SIMULATION_STEP_DURATION);
     function_data_generator(a_in->member[1], a_in->member[0], input_generator);
 
@@ -77,8 +72,8 @@ int main() {
 
     for (array_t_size_typedef i = 0; i < SIMULATION_LENGTH - 1; i++)
     {
-        if(i % 100000 == 0)
-            printf("%u\n", i);
+        if(i % 10000 == 0)
+            update_progress_bar(i, SIMULATION_LENGTH-1);
 
         z_tmp->val[0] = z->member[0]->val[i];
         z_tmp->val[1] = z->member[1]->val[i];
@@ -90,16 +85,25 @@ int main() {
         z->member[0]->val[i+1] = z_next->val[0];
         z->member[1]->val[i+1] = z_next->val[1];
     }
+    putchar('\n');
 
     array_t out_raw[4] = {a_in->member[0], a_in->member[1], z->member[0], z->member[1]};
     vector_t out = combine_to_vector(4, out_raw);
     
+    FILE *param_file, *output_file;
+    open_data_files(&param_file, &output_file, "data");
     
-    char file_name[80];
-    sprintf(file_name, "%s-data.dat", date);
-    FILE *f = fopen(file_name, "w");
-    save_vector_data(out, f);
-    fclose(f);
+
+    save_vector_data(out, output_file);
+    fclose(output_file);
+    save_simulation_param(
+        param_file, 
+        SIMULATION_DURATION, 
+        SIMULATION_LENGTH, 
+        SIMULATION_STEP_DURATION, 
+        mass, 
+        spring_coef, 
+        dumping_coef);
 
     return 0;
 }
