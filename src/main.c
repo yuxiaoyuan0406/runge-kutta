@@ -119,8 +119,8 @@ int main() {
     update_progress_bar(SIMULATION_STEPS-1, SIMULATION_STEPS-1, "Simulation progress: ");
 
     // Combine time sequence, input sequence, output displacement, output velocity to one vector.
-    array_t out_raw[4] = {a_in->member[0], a_in->member[1], z->member[0], z->member[1]};
-    vector_t out = combine_to_vector(4, out_raw);
+    array_t out_raw[] = {a_in->member[0], a_in->member[1], z->member[0], z->member[1]};
+    vector_t out = combine_to_vector(sizeof(out_raw)/sizeof(array_t) , out_raw);
     
     // Save time and i/o data.
     save_vector_data(out, output_file);
