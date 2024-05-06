@@ -1,13 +1,12 @@
 /// @author Xiaoyuan Yu
 /// @date   2024-04-27
+/// @brief  Basic data type and data object function.
 
 #ifndef __DATA_TYPE_H
 #define __DATA_TYPE_H
 
 #include "common.h"
 #include <stdbool.h>
-
-/// Basic data type and data object function.
 
 /// @brief check if two array data object is same size
 #define IS_SAME_SIZE(a,b) ((a)->size == (b)->size)

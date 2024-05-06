@@ -10,8 +10,13 @@
 /// todo windows system operation lib
 #endif
 
+/// @brief Create a directory if not-exists.
+/// @param path The directory to check.
+/// @return Status.
+// int create_directory(const char *path);
 int create_directory(const char *path)
 {
+    // This code comes from ChatGPT.
     struct stat st = {0};
 
     if (stat(path, &st) == -1)
@@ -25,8 +30,13 @@ int create_directory(const char *path)
     return 0;
 }
 
+/// @brief Create a path.
+/// @param path The path to create.
+/// @return Status.
+// int create_path(const char *path);
 int create_path(const char *path)
 {
+    // This code comes from ChatGPT.
     char *temp = strdup(path);
     char *pos = temp;
     int status = 0;
@@ -54,6 +64,11 @@ int create_path(const char *path)
     return status;
 }
 
+/// @brief Get system date-time, store in a string.
+/// @param buffer The string buffer.
+/// @param max_size The size of the buffer.
+/// @return The buffer.
+// char *system_time(char *buffer, size_t max_size);
 char *system_time(char *buffer, size_t max_size)
 {
     time_t now;

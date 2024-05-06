@@ -60,6 +60,9 @@ void* f(array_t dz, array_t z, array_t_value_typedef t, bool is_half, void * par
     return NULL;
 }
 
+/// @brief Generate input acceleration. A double-to-double function.
+/// @param x Independent variable.
+/// @return Dependent variable.
 double input_generator(double x)
 {
     return 0.00004 * sin(2*PI * 50*x);
@@ -119,7 +122,7 @@ int main() {
     update_progress_bar(SIMULATION_STEPS-1, SIMULATION_STEPS-1, "Simulation progress: ");
 
     // Combine time sequence, input sequence, output displacement, output velocity to one vector.
-    array_t out_raw[] = {a_in->member[0], a_in->member[1], z->member[0], z->member[1]};
+    array_t out_raw[] = {a_in->member[0], a_in->member[1], z->member[0]/*, z->member[1]*/};
     vector_t out = combine_to_vector(sizeof(out_raw)/sizeof(array_t) , out_raw);
     
     // Save time and i/o data.

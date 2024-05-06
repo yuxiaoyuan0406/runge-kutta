@@ -6,22 +6,6 @@
 
 #include "common.h"
 
-/// @brief Create a directory if not-exists.
-/// @param path The directory to check.
-/// @return Status.
-// int create_directory(const char *path);
-
-/// @brief Create a path.
-/// @param path The path to create.
-/// @return Status.
-// int create_path(const char *path);
-
-/// @brief Get system date-time, store in a string.
-/// @param buffer The string buffer.
-/// @param max_size The size of the buffer.
-/// @return The buffer.
-// char *system_time(char *buffer, size_t max_size);
-
 /// @brief Save the simulation parameters to a file.
 /// @param f The file handler.
 /// @param duration The duration of the whole simulation.
