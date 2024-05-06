@@ -36,10 +36,12 @@ def read_all_from_file(file_name):
 # input_dat.close()
 
 # index_raw = []
-input_raw = read_all_from_file('data/2024-05-06-102550/output.dat')
+input_raw = read_all_from_file('data/2024-05-06-105849/output.dat')
+# fortran_raw = read_all_from_file('data/2024-05-06-103518/output.dat')[2]
 fortran_raw = np.array(read_dat_from_file("disp_9.dat"))
+matlab_raw = np.array(read_all_from_file("data/matlab/disp_other.txt"))
 
-diff = input_raw[2] - fortran_raw
+diff = input_raw[2] - matlab_raw
 
 # for line in lines:
 #     val = line.strip().split()
@@ -102,7 +104,8 @@ diff = input_raw[2] - fortran_raw
 
 
 plt.figure()
-# plt.plot(input_raw[2], color='blue')
+# plt.plot(input_raw[2], color='blue', label='c')
+# plt.plot(matlab_raw, color='red',label='matlab')
 # plt.plot(fortran_raw, color='red')
 # plt.plot(output_raw_1, color='blue')
 # plt.plot(output_raw_2, color='red')
@@ -110,7 +113,7 @@ plt.figure()
 
 # plt.plot(output, color='blue')
 # plt.plot(other, color='green')
-plt.plot(diff, color='red')
+plt.plot(diff, color='red', label='diff')
 # plt.plot(diff2, color='purple')
 
 
