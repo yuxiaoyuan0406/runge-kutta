@@ -26,7 +26,7 @@ void function_data_generator(array_t dest, array_t src, simple_function_t f)
         dest->val[i] = f(src->val[i]);
 }
 
-array_t array_addition(array_t a1, array_t a2, array_t sum)
+array_t array_addition(array_t sum, array_t a1, array_t a2)
 {
     // CHECK_NONE_ZERO(a1, "Error: operating on null array");
     // CHECK_NONE_ZERO(a2, "Error: operating on null array");
@@ -53,14 +53,14 @@ array_t array_copy(array_t dest, array_t src)
     return dest;
 }
 
-void* thread_add_array(void* par)
+void* _thread_add_array(void* par)
 {
     array_t *a = (array_t*) par;
     array_addition(*a, *(a+1), *(a+2));
     return NULL;
 }
 
-vector_t vector_addition(vector_t a1, vector_t a2, vector_t sum)
+vector_t vector_addition(vector_t sum, vector_t a1, vector_t a2)
 {
     // CHECK_NONE_ZERO(a1, "Error: operating on null array");
     // CHECK_NONE_ZERO(a2, "Error: operating on null array");
@@ -72,16 +72,16 @@ vector_t vector_addition(vector_t a1, vector_t a2, vector_t sum)
 
     for (vector_t_dim_typedef i = 0; i < a1->dim; i++)
     {
-        // array_addition(a1->member[i], a2->member[i], sum->member[i]);
-        array_t a[3] = {a1->member[i], a2->member[i], sum->member[i]};
-        pthread_create(&thr, NULL, thread_add_array, (void*)a);
+        // array_addition(sum->member[i], a1->member[i], a2->member[i]);
+        array_t a[3] = {sum->member[i], a1->member[i], a2->member[i]};
+        pthread_create(&thr, NULL, _thread_add_array, (void*)a);
     }
     pthread_join(thr, NULL);
     
     return sum;
 }
 
-array_t number_multiplication_array(array_t_value_typedef x, array_t a, array_t prod)
+array_t number_multiplication_array(array_t prod, array_t_value_typedef x, array_t a)
 {
     // CHECK_NONE_ZERO(IS_SAME_SIZE(a, prod), "Expecting same size array\n");
 
