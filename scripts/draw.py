@@ -1,9 +1,14 @@
+'''
+Author: Xiaoyuan Yu
+'''
 import numpy as np
+import matplotlib
+matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 def read_dat_from_file(file_name):
     data = []
-    with open(file_name) as file:
+    with open(file_name, 'r') as file:
         lines = file.readlines()
         file.close()
     for line in lines:
@@ -11,12 +16,27 @@ def read_dat_from_file(file_name):
         data.append(float(val[0]))
     return data
 
+def read_all_from_file(file_name):
+    '''
+    Read all data from text file.
+    '''
+    data = []
+    with open(file_name, 'r') as file:
+        lines = file.readlines()
+        file.close()
+    for line in lines:
+        val = line.strip().split()
+        val = [float(v) for v in val]
+        data.append(val)
+    a = np.array(data).transpose()
+    return a
+
 # input_dat = open('test_input.dat')
 # lines = input_dat.readlines()
 # input_dat.close()
 
 # index_raw = []
-input_raw = read_dat_from_file('data.txt')
+input_raw = read_all_from_file('data/2024-05-06-085912/output.dat')
 
 # for line in lines:
 #     val = line.strip().split()
@@ -79,7 +99,7 @@ input_raw = read_dat_from_file('data.txt')
 
 
 plt.figure()
-plt.plot(input_raw, color='blue')
+plt.plot(input_raw[2], color='blue')
 # plt.plot(output_raw_1, color='blue')
 # plt.plot(output_raw_2, color='red')
 # plt.plot(output_raw_3, color='red')
@@ -93,3 +113,5 @@ plt.plot(input_raw, color='blue')
 
 plt.grid(True)
 plt.show()
+
+
