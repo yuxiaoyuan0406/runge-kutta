@@ -2,8 +2,6 @@
 Author: Xiaoyuan Yu
 '''
 import numpy as np
-import matplotlib
-matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 def read_dat_from_file(file_name):
@@ -36,12 +34,15 @@ def read_all_from_file(file_name):
 # input_dat.close()
 
 # index_raw = []
-input_raw = read_all_from_file('data/2024-05-06-105849/output.dat')
+input_raw = read_all_from_file('data/2024-05-06-185751/output.dat')
 # fortran_raw = read_all_from_file('data/2024-05-06-103518/output.dat')[2]
-fortran_raw = np.array(read_dat_from_file("disp_9.dat"))
+fortran_raw = np.array(read_all_from_file("disp_9.dat"))
+s_fortran_raw = np.array(read_all_from_file("disp_fortran_standard_input.dat"))
+fortran_sin = np.array(read_all_from_file("fortran-sin.dat"))
 matlab_raw = np.array(read_all_from_file("data/matlab/disp_other.txt"))
+py_raw = np.array(read_all_from_file("disp_py.dat"))
 
-diff = input_raw[2] - matlab_raw
+diff = input_raw[2] - py_raw[0]
 
 # for line in lines:
 #     val = line.strip().split()
@@ -104,19 +105,26 @@ diff = input_raw[2] - matlab_raw
 
 
 plt.figure()
+
 # plt.plot(input_raw[2], color='blue', label='c')
-# plt.plot(matlab_raw, color='red',label='matlab')
-# plt.plot(fortran_raw, color='red')
+# plt.plot(py_raw[0], color='green', label='py')
+# plt.plot(matlab_raw[0], color='purple',label='matlab')
+plt.plot(fortran_raw[1], color='red', label='fortran')
+plt.plot(s_fortran_raw[1], color='green', label='fortran s')
+
+# plt.plot(input_raw[2]-fortran_raw[1], color='black', label='diff')
+# plt.plot(input_raw[1]-fortran_sin[0])
+
 # plt.plot(output_raw_1, color='blue')
 # plt.plot(output_raw_2, color='red')
 # plt.plot(output_raw_3, color='red')
 
 # plt.plot(output, color='blue')
 # plt.plot(other, color='green')
-plt.plot(diff, color='red', label='diff')
+# plt.plot(diff, color='red', label='diff')
 # plt.plot(diff2, color='purple')
 
-
+plt.legend(loc='best')
 
 plt.grid(True)
 plt.show()

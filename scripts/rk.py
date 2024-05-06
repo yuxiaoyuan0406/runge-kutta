@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm
+from numba import jit
 
 from scipy.integrate import odeint
 
@@ -10,25 +12,20 @@ dumping_coef = 4.95e-6
 normal_spr_coef = spring_coef/mass
 normal_dmp_coef = dumping_coef/mass
 
+@jit(nopython=True)
 def a(t):
-    return 0.0004 * np.sin(2*np.pi * 50 * t)
+    return 0.00004 * np.sin(2*np.pi * 50 * t)
 
-def f(y,t,k,b):
-    z1, z2 = y
-    dydt = [
-        z2,
-        -k*z1 -b*z2 + a(t)
-    ]
-    return dydt
-
+@jit(nopython=True)
 def f1(y,t):
     z1, z2 = y
-    dydt = [
+    dydt = np.array([
         z2,
         -normal_spr_coef*z1 -normal_dmp_coef*z2 + a(t)
-    ]
-    return np.array(dydt)
+    ])
+    return dydt
 
+@jit(nopython=True)
 def runge_kutta(func, t_0, y_0, h):
     '''
     -
@@ -46,27 +43,33 @@ def runge_kutta(func, t_0, y_0, h):
     return t_1, y_1
 
 t_0 = 0.
-y_0 = [0.,0.]
+y_0 = np.array([0.,0.])
 
 h = 1e-6
 
-t = np.array([t_0])
-y = np.array([y_0])
+t = [t_0]
+y = [y_0]
 
 _t = t_0
 _y = y_0
-for i in range(2000000-1):
+for i in tqdm(range(2000000-1), desc="Runge-Kutta"):
     _t, _y = runge_kutta(f1, _t, _y, h)
-    np.append(t, _t)
-    np.append(y, _y)
+    # t = np.append(t, [_t], 0)
+    # y = np.append(y, [_y], 0)
+    t.append(_t)
+    y.append(_y)
 
+t = np.array(t)
+y = np.array(y)
 
 # y0 = [0.,0.]
 # t = np.linspace(0.,2., num=2000000)
 
+np.savetxt('disp_py.dat', y, delimiter=' ')
+
 # sol = odeint(f, y0, t, args=(normal_spr_coef, normal_dmp_coef))
 
-plt.plot(t, y[:][0], 'blue', label='x(t)')
+plt.plot(t, y.transpose()[0], 'blue', label='x(t)')
 # plt.plot(t, sol[:, 0], 'blue', label='x(t)')
 # plt.plot(t, sol[:, 1], 'green', label='v(t)')
 # plt.legend(loc='best')
