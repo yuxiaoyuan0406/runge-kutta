@@ -93,9 +93,9 @@ CCCCCC ARE NORMALIZED BY MASS OF MASS BLOCK.                        CCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       CoefSpr=CoefSpr/Amass
       CoefDmp=CoefDmp/Amass
-      CoefSpr=7540516.00
-      CoefSpr=75405160.00
-      CoefDmp=6.63285017
+      ! CoefSpr=7540516.00
+      ! CoefSpr=75405160.00
+      ! CoefDmp=6.63285017
 !     CoefSpr1=2.746*1000.0
 !     CoefSpr1=CoefSpr1*CoefSpr1
 !     CoefDmp1=2.746*1000.0/414.0
@@ -163,7 +163,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 200   CONTINUE
       open(14,file="disp_9.dat")
       do i=1,N_LENTH
-          write(14,*) DISP(i)
+          write(14,*) i,DISP(i)
       enddo
       close(14)
       end

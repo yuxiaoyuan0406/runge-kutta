@@ -65,7 +65,7 @@ void* f(array_t dz, array_t z, array_t_value_typedef t, bool is_half, void * par
 /// @return Dependent variable.
 double input_generator(double x)
 {
-    return 0.00004 * sin(2*PI * 50*x);
+    return 0.0004 * sin(2*PI * 50*x);
 }
 
 int main() {

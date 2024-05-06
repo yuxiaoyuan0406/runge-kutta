@@ -13,7 +13,7 @@ def read_dat_from_file(file_name):
         file.close()
     for line in lines:
         val = line.strip().split()
-        data.append(float(val[0]))
+        data.append(float(val[1]))
     return data
 
 def read_all_from_file(file_name):
@@ -36,7 +36,10 @@ def read_all_from_file(file_name):
 # input_dat.close()
 
 # index_raw = []
-input_raw = read_all_from_file('data/2024-05-06-085912/output.dat')
+input_raw = read_all_from_file('data/2024-05-06-102550/output.dat')
+fortran_raw = np.array(read_dat_from_file("disp_9.dat"))
+
+diff = input_raw[2] - fortran_raw
 
 # for line in lines:
 #     val = line.strip().split()
@@ -99,14 +102,15 @@ input_raw = read_all_from_file('data/2024-05-06-085912/output.dat')
 
 
 plt.figure()
-plt.plot(input_raw[2], color='blue')
+# plt.plot(input_raw[2], color='blue')
+# plt.plot(fortran_raw, color='red')
 # plt.plot(output_raw_1, color='blue')
 # plt.plot(output_raw_2, color='red')
 # plt.plot(output_raw_3, color='red')
 
 # plt.plot(output, color='blue')
 # plt.plot(other, color='green')
-# plt.plot(diff, color='red')
+plt.plot(diff, color='red')
 # plt.plot(diff2, color='purple')
 
 
