@@ -78,21 +78,21 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCC THE ACCELERATION FORCED TO THE MEMS DIE                      CCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      DO 100 K=1,N_LENTH
-          Time0=(k-1.)*DT_time
-          ACCEL(K)=0.00004*SIN(2.0*PI*50*Time0)
-      !     ACCEL(K)=40.*SIN(2.0*PI*50*Time0)
-100   continue
+!       DO 100 K=1,N_LENTH
+!           Time0=(k-1.)*DT_time
+!           ACCEL(K)=0.00004*SIN(2.0*PI*50*Time0)
+!       !     ACCEL(K)=40.*SIN(2.0*PI*50*Time0)
+! 100   continue
       ! open(13,file="fortran-sin.dat")
       ! do i=1,N_LENTH
       !     write(13,*) ACCEL(i)
       ! enddo
       ! close(13)
-      ! open(10,file="standard_input.dat", status="old", action="read")
-      ! do i=1,N_LENTH
-      !       read(10,*,IOSTAT=io_stat) ACCEL(i)
-      ! enddo
-      ! close(10)
+      open(10,file="standard_input.dat", status="old", action="read")
+      do i=1,N_LENTH
+            read(10,*,IOSTAT=io_stat) ACCEL(i)
+      enddo
+      close(10)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCC SPRING COEFFICIENT(CoefSpr) AND DUMPING COEFFICITNE(CoefDmp) CCC
 CCCCCC ARE NORMALIZED BY MASS OF MASS BLOCK.                        CCC
@@ -167,7 +167,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
      &                      /6.0*DT_time
           DISP(K+1)=DispIter
 200   CONTINUE
-      open(14,file="disp_9.dat")
+      open(14,file="disp_for.dat")
       do i=1,N_LENTH
           write(14,*) i,DISP(i)
       enddo

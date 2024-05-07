@@ -65,7 +65,8 @@ y = np.array(y)
 # y0 = [0.,0.]
 # t = np.linspace(0.,2., num=2000000)
 
-np.savetxt('disp_py.dat', y, delimiter=' ')
+np.savetxt('standard_input.dat', a(t).transpose(), delimiter=' ')
+np.savetxt('disp_py.dat', y, delimiter='  ')
 
 # sol = odeint(f, y0, t, args=(normal_spr_coef, normal_dmp_coef))
 

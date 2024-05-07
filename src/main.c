@@ -71,8 +71,8 @@ double input_generator(double x)
 
 int main() {
     // Open parameter and output file.
-    FILE *param_file, *output_file;
-    open_data_files(&param_file, &output_file, "data");
+    // FILE *param_file, *output_file;
+    // open_data_files(&param_file, &output_file, "data");
     
     // Normalize coeficients
     normal_spr_coef = spring_coef / mass;
@@ -81,8 +81,16 @@ int main() {
     // Generate input data.
     vector_t a_in = new_vector(2, SIMULATION_STEPS);
     linear_data_generator(a_in->member[0], 0, SIMULATION_STEP_DURATION);
-    function_data_generator(a_in->member[1], a_in->member[0], input_generator);
-
+    // function_data_generator(a_in->member[1], a_in->member[0], input_generator);
+    FILE *input_file = fopen("standard_input.dat", "r");
+    for (size_t i = 0; i < SIMULATION_STEPS; i++)
+    {
+        char s[40];
+        fgets(s, sizeof(s), input_file);
+        a_in->member[1]->val[i] = strtod(s, NULL);
+    }
+    fclose(input_file);
+    
     // FILE *file_sin = fopen("standard_input.dat", "w");
     // save_array_data(a_in->member[1], file_sin);
     // fclose(file_sin);
@@ -131,18 +139,19 @@ int main() {
     vector_t out = combine_to_vector(sizeof(out_raw)/sizeof(array_t) , out_raw);
     
     // Save time and i/o data.
+    FILE *output_file = fopen("disp_c.dat", "w");
     save_vector_data(out, output_file);
     fclose(output_file);
     // Save sumulation parameters.
-    save_simulation_param(
-        param_file, 
-        SIMULATION_DURATION, 
-        SIMULATION_STEPS, 
-        SIMULATION_STEP_DURATION, 
-        mass, 
-        spring_coef, 
-        dumping_coef);
-    fclose(param_file);
+    // save_simulation_param(
+    //     param_file, 
+    //     SIMULATION_DURATION, 
+    //     SIMULATION_STEPS, 
+    //     SIMULATION_STEP_DURATION, 
+    //     mass, 
+    //     spring_coef, 
+    //     dumping_coef);
+    // fclose(param_file);
 
     return 0;
 }

@@ -34,15 +34,15 @@ def read_all_from_file(file_name):
 # input_dat.close()
 
 # index_raw = []
-input_raw = read_all_from_file('data/2024-05-06-185751/output.dat')
+# input_raw = read_all_from_file('data/2024-05-06-185751/output.dat')
 # fortran_raw = read_all_from_file('data/2024-05-06-103518/output.dat')[2]
-fortran_raw = np.array(read_all_from_file("disp_9.dat"))
-s_fortran_raw = np.array(read_all_from_file("disp_fortran_standard_input.dat"))
-fortran_sin = np.array(read_all_from_file("fortran-sin.dat"))
-matlab_raw = np.array(read_all_from_file("data/matlab/disp_other.txt"))
-py_raw = np.array(read_all_from_file("disp_py.dat"))
+# fortran_raw = np.array(read_all_from_file("disp_9.dat"))
+# s_fortran_raw = np.array(read_all_from_file("disp_fortran_standard_input.dat"))
+# fortran_sin = np.array(read_all_from_file("fortran-sin.dat"))
+# matlab_raw = np.array(read_all_from_file("data/matlab/disp_other.txt"))
+# py_raw = np.array(read_all_from_file("disp_py.dat"))
 
-diff = input_raw[2] - py_raw[0]
+# diff = input_raw[2] - py_raw[0]
 
 # for line in lines:
 #     val = line.strip().split()
@@ -102,15 +102,27 @@ diff = input_raw[2] - py_raw[0]
 # print(sum2)
 # print((sum1-sum2)/sum1)
 
+c_raw   = np.array(read_all_from_file('disp_c.dat'))[2]
+py_raw  = np.array(read_all_from_file('disp_py.dat'))[0]
+for_raw = np.array(read_all_from_file('disp_for.dat'))[1]
 
+length = c_raw.shape[0]
+
+print("C-Py diff:   {}".format(np.sqrt(np.sum((c_raw - py_raw)**2) / length)))
+print("C-for diff:  {}".format(np.sqrt(np.sum((c_raw - for_raw)**2)/ length)))
+print("for-Py diff: {}".format(np.sqrt(np.sum((for_raw - py_raw)**2)/length)))
 
 plt.figure()
 
 # plt.plot(input_raw[2], color='blue', label='c')
 # plt.plot(py_raw[0], color='green', label='py')
 # plt.plot(matlab_raw[0], color='purple',label='matlab')
-plt.plot(fortran_raw[1], color='red', label='fortran')
-plt.plot(s_fortran_raw[1], color='green', label='fortran s')
+# plt.plot(fortran_raw[1], color='red', label='fortran')
+# plt.plot(s_fortran_raw[1], color='green', label='fortran s')
+
+plt.plot(c_raw,   label='c')
+plt.plot(for_raw, label='for')
+plt.plot(py_raw,  label='py')
 
 # plt.plot(input_raw[2]-fortran_raw[1], color='black', label='diff')
 # plt.plot(input_raw[1]-fortran_sin[0])
