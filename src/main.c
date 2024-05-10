@@ -65,8 +65,10 @@ void* f(array_t dz, array_t z, array_t_value_typedef t, bool is_half, void * par
 /// @return Dependent variable.
 double input_generator(double x)
 {
-    return 0.00004 * sin(2*PI * 50*x);
+    // return 0.00004 * sin(2*PI * 50*x);
     // return 40 * sin(2*PI * 50*x);
+    // return x < SIMULATION_STEP_DURATION ? 1 : 0;
+    return sin(2*PI * 50*x);
 }
 
 int main() {
@@ -81,15 +83,15 @@ int main() {
     // Generate input data.
     vector_t a_in = new_vector(2, SIMULATION_STEPS);
     linear_data_generator(a_in->member[0], 0, SIMULATION_STEP_DURATION);
-    // function_data_generator(a_in->member[1], a_in->member[0], input_generator);
-    FILE *input_file = fopen("standard_input.dat", "r");
-    for (size_t i = 0; i < SIMULATION_STEPS; i++)
-    {
-        char s[40];
-        fgets(s, sizeof(s), input_file);
-        a_in->member[1]->val[i] = strtod(s, NULL);
-    }
-    fclose(input_file);
+    function_data_generator(a_in->member[1], a_in->member[0], input_generator);
+    // FILE *input_file = fopen("standard_input.dat", "r");
+    // for (size_t i = 0; i < SIMULATION_STEPS; i++)
+    // {
+    //     char s[40];
+    //     fgets(s, sizeof(s), input_file);
+    //     a_in->member[1]->val[i] = strtod(s, NULL);
+    // }
+    // fclose(input_file);
     
     // FILE *file_sin = fopen("standard_input.dat", "w");
     // save_array_data(a_in->member[1], file_sin);
