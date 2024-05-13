@@ -46,11 +46,11 @@ if __name__ == '__main__':
     # t,dt = np.linspace(0,2,2000000, retstep=True)
     # a = np.sin(2*np.pi*50*t) + np.sin(2*np.pi*5e4*t)
     # a2=np.sin(2*np.pi*100*t) + np.sin(2*np.pi*5e8*t)
-    # disp = np.loadtxt('disp_c.dat').transpose()[2]
-    disp = np.loadtxt('fortran/disp_9.dat').transpose()[1]
+    disp = np.loadtxt('disp_c.dat').transpose()[2]
+    # disp = np.loadtxt('bit_c.dat')
 
  
-    freq_and_plot(disp, 1e-6, log=True, max_freq=1e4)
+    freq_and_plot(disp, 5e-7, log=True, max_freq=1e4)
     # freq_and_plot(a, dt)
     # freq_and_plot(np.array([a,a2]), dt)
 
