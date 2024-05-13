@@ -4,29 +4,33 @@
 #include "rk.h"
 #include "data_generator.h"
 #include "data_type.h"
+#include "elec.h"
+#include "pid.h"
 #include "util.h"
 
 /// @brief Duration of simulation (s)
-#define SIMULATION_DURATION         (2.0)
-/// @brief Simulation steps
+#define SIMULATION_DURATION         (1.0)
+/// @brief Total simulation steps
 #define SIMULATION_STEPS            (2000000)
 /// @brief Duration of simulation step (s)
 #define SIMULATION_STEP_DURATION    (SIMULATION_DURATION / SIMULATION_STEPS)
+/// @brief The simulation steps of one work period.
+#define WORK_PERIOD_STEPS           (32)
 
 /// @brief pi
 #define PI (4*atan(1))
 
 /// @brief The mass of mass block
-const array_t_value_typedef mass = 7.45e-7;
+const real mass = 7.45e-7;
 /// @brief The spring coeficient
-const array_t_value_typedef spring_coef = 5.623;
+const real spring_coef = 5.623;
 /// @brief The dumping coeficient
-const array_t_value_typedef dumping_coef = 4.95e-6;
+const real dumping_coef = 4.95e-6;
 
 /// @brief The normalized spring coeficient
-array_t_value_typedef normal_spr_coef;
+real normal_spr_coef;
 /// @brief The normalized dumping coeficient
-array_t_value_typedef normal_dmp_coef;
+real normal_dmp_coef;
 
 /// @brief The status space function of spring-dumping system. dz = A*z + B*a
 /// @param dz The differentiation of the system state.
@@ -34,13 +38,15 @@ array_t_value_typedef normal_dmp_coef;
 /// @param t Current time.
 /// @param is_half Is this call to calculate a half-step value.
 /// @param par Extra parameters. 
-/// {(pointer to current simulation step count), (input data with time sequence)}
+/// {(pointer to current simulation step count), (input data with time sequence), (pid command for pull direction)}
 /// @return nothing
-void* f(array_t dz, array_t z, array_t_value_typedef t, bool is_half, void * par)
+void* f(array_t dz, array_t z, real t, bool is_half, void * par)
 {
     array_t_size_typedef index = *(array_t_size_typedef *)((void **)par)[0];
     vector_t v = (vector_t)((void **)par)[1];
-    array_t_value_typedef a = 0;
+    bit_t cmd = *(bit_t *)((void **)par)[2];
+    real a = 0;
+
     if (is_half)
         if (v->member[0]->val[index] < t && t < v->member[0]->val[index+1])
             a = (v->member[1]->val[index] + v->member[1]->val[index+1])/2;
@@ -50,9 +56,11 @@ void* f(array_t dz, array_t z, array_t_value_typedef t, bool is_half, void * par
         if (t == v->member[0]->val[index])
             a = v->member[1]->val[index]; 
         else if (t == v->member[0]->val[index + 1])
-            a = v->member[1]->val[index + 1]; 
+            a = v->member[1]->val[index + 1];
         else
             return NULL;
+    
+    a += force_elec(z->val[0], cmd);
 
     dz->val[0] = z->val[1];
     dz->val[1] = -normal_spr_coef * z->val[0] - normal_dmp_coef * z->val[1] + a;
@@ -100,6 +108,9 @@ int main() {
     // The output of the simulated system.
     vector_t z = new_vector(2, SIMULATION_STEPS);
 
+    bit_t bit_stream[SIMULATION_STEPS];
+    bit_stream[0] = pull_no;
+
     // initial condition
     z->member[0]->val[0] = 0;
     z->member[1]->val[0] = 0;
@@ -110,29 +121,44 @@ int main() {
     array_t z_next = new_array(2);
 
     // Extra parameters pass to state space equation.
-    void *extra_par[2];
+    void *extra_par[3];
+
+    // `extra_par[1]` input data
+    extra_par[1] = (void*)a_in;
+
+    bit_t cmd = pull_no;
 
     // main simulation loop
-    for (array_t_size_typedef i = 0; i < SIMULATION_STEPS - 1; i++)
+    for (array_t_size_typedef i = 0; i < SIMULATION_STEPS - 1; i+=(WORK_PERIOD_STEPS))
     {
-        // update progress bar every (SIMULATION_STEPS/500) steps
-        if(i % (SIMULATION_STEPS / 500) == 0)
-            update_progress_bar(i, SIMULATION_STEPS-1, "Simulation progress: ");
+        array_t_size_typedef j;
+        for (j = i; j < i + WORK_PERIOD_STEPS; j++)
+        {
+            bit_stream[j] = cmd;
+            // update temporaty status
+            z_tmp->val[0] = z->member[0]->val[i];
+            z_tmp->val[1] = z->member[1]->val[i];
 
-        // update temporaty status
-        z_tmp->val[0] = z->member[0]->val[i];
-        z_tmp->val[1] = z->member[1]->val[i];
+            if (j >= SIMULATION_STEPS - 1)
+                break;
+            
+            // update progress bar every (SIMULATION_STEPS/500) steps
+            if(j % (SIMULATION_STEPS / 500) == 0)
+                update_progress_bar(j, SIMULATION_STEPS-1, "Simulation progress: ");
 
-        // update extra parameters
-        // `extra_par[0]` current loop step or status index
-        // `extra_par[1]` input data
-        extra_par[0] = (void*)&i;
-        extra_par[1] = (void*)a_in;
+            // update extra parameters
+            extra_par[0] = (void*)&j;
+            bit_t cmd_tmp = pull_no;
+            extra_par[2] = (j - i) < (WORK_PERIOD_STEPS / 2) ? (void*)&cmd_tmp: (void*)&cmd;
 
-        // Runge-Kutta methods with status space equation.
-        runge_kutta_next_step(z_next, z_tmp, a_in->member[0]->val[i], SIMULATION_STEP_DURATION, f, extra_par);
-        z->member[0]->val[i+1] = z_next->val[0];
-        z->member[1]->val[i+1] = z_next->val[1];
+            // Runge-Kutta methods with status space equation.
+            runge_kutta_next_step(z_next, z_tmp, a_in->member[0]->val[j], SIMULATION_STEP_DURATION, f, extra_par);
+            
+            // Save calculate result
+            z->member[0]->val[j+1] = z_next->val[0];
+            z->member[1]->val[j+1] = z_next->val[1];
+        }
+        cmd = pid_command(z_next->val[0]);
     }
     update_progress_bar(SIMULATION_STEPS-1, SIMULATION_STEPS-1, "Simulation progress: ");
 
@@ -144,6 +170,14 @@ int main() {
     FILE *output_file = fopen("disp_c.dat", "w");
     save_vector_data(out, output_file);
     fclose(output_file);
+
+    FILE *bit_file = fopen("bit_c.dat", "w");
+    for (size_t i = 0; i < sizeof(bit_stream)/sizeof(bit_stream[0]); i++)
+    {
+        fprintf(bit_file, "%d\n", bit_stream[i]);
+    }
+    fclose(bit_file);
+    
     // Save sumulation parameters.
     // save_simulation_param(
     //     param_file, 
