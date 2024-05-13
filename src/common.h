@@ -11,4 +11,6 @@
 #include <errno.h>
 #include <string.h>
 
+typedef double real;
+
 #endif

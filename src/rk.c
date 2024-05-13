@@ -19,7 +19,7 @@ array_t runge_kutta_next_step(
     array_t jump = new_array(2);
 
     /// k_0 = f(x_n, y_n)
-   f(k[0], this_y, this_x, false, par);
+    f(k[0], this_y, this_x, false, par);
     number_multiplication_array(jump, step_x/2, k[0]);
     array_addition(jump_y, this_y, jump);
 

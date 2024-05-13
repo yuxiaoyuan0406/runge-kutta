@@ -17,7 +17,7 @@
 /// @brief size type of array data
 typedef uint32_t array_t_size_typedef;
 /// @brief value type of array data
-typedef double array_t_value_typedef;
+typedef real array_t_value_typedef;
 
 /// @brief Array data type. 
 /// @note Once created, array size should never be changed.
